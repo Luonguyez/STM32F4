@@ -42,7 +42,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+volatile __UINT32_TYPE__ last_button_time = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -92,17 +92,22 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
-    if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
+ while (1)
+{
+    // Nếu nút được nhấn và thời gian trôi qua đủ lớn
+    if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET &&
+        (HAL_GetTick() - last_button_time) > 200)  // 200ms debounce
     {
-      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-      HAL_Delay(200);
+        // Cập nhật thời điểm nhấn mới
+        last_button_time = HAL_GetTick();
 
+        // Toggle LED
+        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
     }
-    /* USER CODE BEGIN 3 */
-  }
+}
+
+  /* USER CODE BEGIN 3 */
+  
   /* USER CODE END 3 */
 }
 
