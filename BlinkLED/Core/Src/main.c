@@ -102,7 +102,7 @@ int main(void)
         last_button_time = HAL_GetTick();
 
         // Toggle LED
-        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13);
     }
 }
 
