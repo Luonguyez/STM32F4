@@ -94,16 +94,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
  while (1)
 {
-    // Nếu nút được nhấn và thời gian trôi qua đủ lớn
-    if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET &&
-        (HAL_GetTick() - last_button_time) > 200)  // 200ms debounce
-    {
-        // Cập nhật thời điểm nhấn mới
-        last_button_time = HAL_GetTick();
-
-        // Toggle LED
-        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13);
-    }
+    
 }
 
   /* USER CODE BEGIN 3 */
@@ -173,8 +164,8 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : PA0 */
   GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PD12 PD13 PD14 PD15 */
@@ -185,7 +176,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
-
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
@@ -207,6 +199,18 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
+  void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  static uint32_t last_tick = 0;
+  if (GPIO_Pin == GPIO_PIN_0)
+  {
+    if ((HAL_GetTick() - last_tick) > 100)  // debounce
+    {
+      last_tick = HAL_GetTick();
+      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_15);  // toggle LED
+    }
+  }
+}
 
 #ifdef  USE_FULL_ASSERT
 /**
@@ -217,10 +221,10 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
+
 #endif /* USE_FULL_ASSERT */
