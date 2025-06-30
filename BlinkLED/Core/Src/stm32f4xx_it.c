@@ -187,7 +187,8 @@ void SysTick_Handler(void)
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
-
+  LED1_Update();
+  LED2_Update();
   /* USER CODE END SysTick_IRQn 1 */
 }
 

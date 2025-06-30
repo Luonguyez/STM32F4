@@ -31,7 +31,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+volatile uint32_t led1_counter = 0;
+volatile uint32_t led2_counter = 0;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -182,6 +183,25 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void LED1_Update(void)
+{
+  led1_counter++;
+  if (led1_counter >= 100)  // 500ms
+  {
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+    led1_counter = 0;
+  }
+}
+
+void LED2_Update(void)
+{
+  led2_counter++;
+  if (led2_counter >= 2000)  // 1000ms
+  {
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+    led2_counter = 0;
+  }
+}
 
 /* USER CODE END 4 */
 
@@ -199,18 +219,19 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-  void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  static uint32_t last_tick = 0;
-  if (GPIO_Pin == GPIO_PIN_0)
-  {
-    if ((HAL_GetTick() - last_tick) > 100)  // debounce
-    {
-      last_tick = HAL_GetTick();
-      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_15);  // toggle LED
-    }
-  }
-}
+
+// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+// {
+//   static uint32_t last_tick = 0;
+//   if (GPIO_Pin == GPIO_PIN_0)
+//   {
+//     if ((HAL_GetTick() - last_tick) > 100)  // debounce
+//     {
+//       last_tick = HAL_GetTick();
+//       HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_15);  // toggle LED
+//     }
+//   }
+// }
 
 #ifdef  USE_FULL_ASSERT
 /**
