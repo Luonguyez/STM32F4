@@ -33,6 +33,7 @@
 /* USER CODE BEGIN PD */
 volatile uint32_t led1_counter = 0;
 volatile uint32_t led2_counter = 0;
+volatile uint32_t button_pressed;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,6 +52,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 
+void LED3_Update(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -95,7 +97,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
  while (1)
 {
-    
+  LED3_Update();
 }
 
   /* USER CODE BEGIN 3 */
@@ -210,6 +212,19 @@ void LED2_Update(void)
     led2_counter = 0;
   }
 }
+/**
+  * @brief  This function is executed toggle led 3 when button is pressed.
+  * @retval None
+  */
+void LED3_Update(void)
+{
+  if (button_pressed == 1)
+  {
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+    button_pressed = 0;
+  }
+  
+}
 
 /* USER CODE END 4 */
 
@@ -228,18 +243,24 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-// {
-//   static uint32_t last_tick = 0;
-//   if (GPIO_Pin == GPIO_PIN_0)
-//   {
-//     if ((HAL_GetTick() - last_tick) > 100)  // debounce
-//     {
-//       last_tick = HAL_GetTick();
-//       HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12|GPIO_PIN_15);  // toggle LED
-//     }
-//   }
-// }
+/**
+  * @brief  This function is executed toggled if button is used, func use EXTI.
+  * @retval None
+  */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  // static uint32_t last_tick = 0;
+  // if (GPIO_Pin == GPIO_PIN_0)
+  // {
+  //   if ((HAL_GetTick() - last_tick) > 100)  // debounce
+  //   {
+  //     last_tick = HAL_GetTick();
+  //     HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);  // toggle LED
+  //   }
+  // }
+
+  button_pressed = 1;
+}
 
 #ifdef  USE_FULL_ASSERT
 /**
