@@ -185,9 +185,14 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
+  HAL_IncTick(); // this func is called after 1ms, due to Systick interrupt.
   /* USER CODE BEGIN SysTick_IRQn 1 */
-  LED1_Update();
+  
+  /**
+  * @brief  This function is called after 1ms, due to systick interrupt.
+  * @retval None
+  */
+  LED1_Update(); 
   LED2_Update();
   /* USER CODE END SysTick_IRQn 1 */
 }

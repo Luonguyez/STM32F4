@@ -183,6 +183,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+/**
+  * @brief  This function is executed toggle led 1 cycles 100 ms.
+  * @retval None
+  */
 void LED1_Update(void)
 {
   led1_counter++;
@@ -193,6 +197,10 @@ void LED1_Update(void)
   }
 }
 
+/**
+  * @brief  This function is executed toggle led 2 cycles 2000 ms.
+  * @retval None
+  */
 void LED2_Update(void)
 {
   led2_counter++;
