@@ -3,6 +3,5 @@
 ../Core/Src/main.c:154:13:MX_GPIO_Init	1
 ../Core/Src/main.c:192:6:LED1_Update	2
 ../Core/Src/main.c:206:6:LED2_Update	2
-../Core/Src/main.c:219:6:LED3_Update	2
-../Core/Src/main.c:235:6:Error_Handler	1
-../Core/Src/main.c:250:6:HAL_GPIO_EXTI_Callback	1
+../Core/Src/main.c:219:6:LED3_Update	4
+../Core/Src/main.c:247:6:Error_Handler	1

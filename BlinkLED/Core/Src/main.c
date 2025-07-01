@@ -167,7 +167,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : PA0 */
   GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -218,13 +218,25 @@ void LED2_Update(void)
   */
 void LED3_Update(void)
 {
-  if (button_pressed == 1)
+  // if (button_pressed == 1)
+  // {
+  //   HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+  //   button_pressed = 0;
+  // }
+  static uint32_t last_tick = 0;
+  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
   {
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-    button_pressed = 0;
+    if ((HAL_GetTick() - last_tick) > 70)// debounce
+    {
+      last_tick = HAL_GetTick();
+    }
+    if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
+    {
+      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);  // toggle LED
+    }
   }
-  
 }
+
 
 /* USER CODE END 4 */
 
@@ -247,20 +259,7 @@ void Error_Handler(void)
   * @brief  This function is executed toggled if button is used, func use EXTI.
   * @retval None
   */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  // static uint32_t last_tick = 0;
-  // if (GPIO_Pin == GPIO_PIN_0)
-  // {
-  //   if ((HAL_GetTick() - last_tick) > 100)  // debounce
-  //   {
-  //     last_tick = HAL_GetTick();
-  //     HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);  // toggle LED
-  //   }
-  // }
 
-  button_pressed = 1;
-}
 
 #ifdef  USE_FULL_ASSERT
 /**
