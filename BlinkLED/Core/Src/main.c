@@ -218,40 +218,80 @@ void LED2_Update(void)
   */
 void LED3_Update(void)
 {
-    static uint32_t last_sample_tick = 0;
-    static uint8_t sample_count = 0;
-    static uint8_t button_state = 0;
-    static uint8_t last_button_state = 0;
+    // static uint32_t last_sample_tick = 0;
+    // static uint8_t sample_count = 0;
+    // static uint8_t button_state = 0;
+    // static uint8_t last_button_state = 0;
 
-    if (HAL_GetTick() - last_sample_tick >= 10) // mỗi 10ms kiểm tra 1 lần
+    // if (HAL_GetTick() - last_sample_tick >= 10) // mỗi 10ms kiểm tra 1 lần
+    // {
+    //     last_sample_tick = HAL_GetTick();
+
+    //     if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
+    //     {
+    //         if (sample_count < 3)
+    //             sample_count++;
+    //     }
+    //     else
+    //     {
+    //         sample_count = 0;
+    //     }
+
+    //     if (sample_count >= 3)
+    //         button_state = 1;
+    //     else
+    //         button_state = 0;
+
+    //     // Phát hiện cạnh lên (nhấn mới)
+    //     if (button_state && !last_button_state)
+    //     {
+    //         HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);  // toggle LED
+    //     }
+    //     last_button_state = button_state;
+    // }
+
+  // static __UINT32_TYPE__ last_tick = 0;
+  // static __UINT8_TYPE__  but_cnt   = 0;
+  // static __UINT8_TYPE__  last_state = 0;
+  // if ((HAL_GetTick() - last_tick) >= 10)
+  // {
+  //   last_tick = HAL_GetTick();
+  //   if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET) &&   
+  //   {
+  //     if (but_cnt < 3)
+  //     {
+  //       but_cnt ++;
+  //     }
+  //     else if (but_cnt >= 3)
+  //     {
+  //       HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+  //     }
+  //     else 
+  //     {
+  //       but_cnt = 0;
+  //     }
+  //   }
+  // }
+	static uint8_t last_button_state = 0;
+	static uint32_t last_tick = 0;
+
+	if ((HAL_GetTick() - last_tick) >= 10)  
+  {
+    last_tick = HAL_GetTick();
+
+    uint8_t current_state = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+
+    if (current_state == GPIO_PIN_RESET && last_button_state == GPIO_PIN_SET)
     {
-        last_sample_tick = HAL_GetTick();
-
-        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET)
-        {
-            if (sample_count < 3)
-                sample_count++;
-        }
-        else
-        {
-            sample_count = 0;
-        }
-
-        if (sample_count >= 3)
-            button_state = 1;
-        else
-            button_state = 0;
-
-        // Phát hiện cạnh lên (nhấn mới)
-        if (button_state && !last_button_state)
-        {
-            HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);  // toggle LED
-        }
-        last_button_state = button_state;
+      //check pulse down to up
+      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
     }
+
+    last_button_state = current_state;
+  }
+
+
 }
-
-
 /* USER CODE END 4 */
 
 /**
