@@ -274,6 +274,7 @@ void LED3_Update(void)
   // }
 	static uint8_t last_button_state = 0;
 	static uint32_t last_tick = 0;
+  static uint8_t count = 0;
 
 	if ((HAL_GetTick() - last_tick) >= 10)  
   {
@@ -283,8 +284,19 @@ void LED3_Update(void)
 
     if (current_state == GPIO_PIN_RESET && last_button_state == GPIO_PIN_SET)
     {
-      //check pulse down to up
-      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+      if (count >=3 )
+      {
+        //check pulse down to up
+        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+      }
+      else if (count < 3)
+      {
+        count ++;
+      }
+      else 
+      {
+        count = 0;
+      }
     }
 
     last_button_state = current_state;
